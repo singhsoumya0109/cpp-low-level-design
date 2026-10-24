@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(CompositePattern CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(composite_classic src/02-classic-pattern.cpp)
+add_executable(test_composite tests/test_composite.cpp)
+add_test(NAME Test_Composite COMMAND test_composite)

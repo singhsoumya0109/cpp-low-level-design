@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(ProxyPattern CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(proxy_classic src/02-classic-pattern.cpp)
+add_executable(test_proxy tests/test_proxy.cpp)
+add_test(NAME Test_Proxy COMMAND test_proxy)

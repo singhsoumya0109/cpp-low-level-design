@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.16)
+project(FacadePattern CXX)
+set(CMAKE_CXX_STANDARD 17)
+add_executable(facade_classic src/02-classic-pattern.cpp)
+add_executable(test_facade tests/test_facade.cpp)
+add_test(NAME Test_Facade COMMAND test_facade)
