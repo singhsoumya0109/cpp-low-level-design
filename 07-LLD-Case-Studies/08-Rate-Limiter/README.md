@@ -1,15 +1,31 @@
-# Case Study: Distributed Rate Limiter
+# Case Study 08: API Rate Limiter Middleware
 
-> **Primary Patterns**: Strategy, Decorator
+> **Difficulty**: Medium | **Primary Patterns**: Strategy, Decorator / Interceptor | **Concurrency**: Atomic & Mutex Protection
 
 ---
 
 ## 1. System Overview
-Design an API rate limiter supporting Token Bucket, Leaky Bucket, and Sliding Window Log algorithms with thread-safe atomic counter synchronization.
+Design a distributed or multi-threaded API rate limiter protecting backend services from traffic spikes and DoS attacks. Supports Token Bucket and Sliding Window algorithms with per-client token buckets.
+
+```mermaid
+classDiagram
+    class TokenBucket {
+        -double capacity_
+        -double refill_rate_per_sec_
+        -double tokens_
+        +allow(tokens) bool
+    }
+    class MultiClientRateLimiter {
+        -map~string, unique_ptr~TokenBucket~~ buckets_
+        +allow_request(client_id) bool
+    }
+    MultiClientRateLimiter *-- TokenBucket
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o rate_limiter_demo && ./rate_limiter_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_rate_limiter.cpp -o test_rate_limiter && ./test_rate_limiter
+```

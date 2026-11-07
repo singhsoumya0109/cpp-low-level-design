@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.15)
+project(TemplateMethod LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(tm_naive src/01-naive-approach.cpp)
+add_executable(tm_classic src/02-classic-pattern.cpp)
+add_executable(tm_realworld src/03-real-world-example.cpp)
+add_executable(tm_modern src/04-modern-cpp-style.cpp)
+add_executable(tm_solution exercises/solutions/solution.cpp)
+add_executable(test_template_method tests/test_template_method.cpp)
+add_test(NAME test_template_method COMMAND test_template_method)

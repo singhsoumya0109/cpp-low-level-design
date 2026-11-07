@@ -1,15 +1,34 @@
-# Case Study: Vending Machine System
+# Case Study 03: Vending Machine System
 
-> **Primary Patterns**: State, Command
+> **Difficulty**: Easy-Medium | **Primary Patterns**: State, Inventory Manager | **Concurrency**: Mutex Synchronization
 
 ---
 
 ## 1. System Overview
-Design an automated vending machine using a Finite State Machine (FSM) to manage state transitions (Idle, HasMoney, Dispensing, SoldOut), coin/cash validation, and inventory deduction.
+Design a self-service automated vending machine that accepts multiple currency denominations, manages product inventories in rack slots, validates funds, dispenses products, and returns exact change.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Idle
+    Idle --> HasMoney : insert_money()
+    HasMoney --> HasMoney : insert_more_money()
+    HasMoney --> Idle : refund()
+    HasMoney --> Dispensing : select_product() [valid & paid]
+    Dispensing --> Idle : dispense() & return_change()
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Core Entities & State Machine
+- `IdleState`: Awaiting customer coin/card insertion.
+- `HasMoneyState`: Balance registered; allowing product selection or transaction cancellation.
+- `DispensingState`: Releasing product item, updating stock count, returning change.
+- `SoldOutState`: Notifying user if selected rack is depleted.
+
+---
+
+## 3. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o vending_demo && ./vending_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_vending.cpp -o test_vending && ./test_vending
+```

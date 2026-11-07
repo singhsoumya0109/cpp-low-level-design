@@ -1,15 +1,40 @@
-# Case Study: In-Memory File System
+# Case Study 06: In-Memory File System
 
-> **Primary Patterns**: Composite, Iterator, Visitor
+> **Difficulty**: Hard | **Primary Patterns**: Composite, Iterator, Proxy | **Concurrency**: Reader-Writer Locks
 
 ---
 
 ## 1. System Overview
-Design an in-memory Unix-like hierarchical file system supporting files, directories, path resolution (/a/b/c), search, and recursive permissions.
+Design an in-memory hierarchical Unix-like file system supporting directories, files, path resolution (`/usr/local/bin`), metadata tracking, recursive directory sizing, and thread-safe concurrent reads and writes (`std::shared_mutex`).
+
+```mermaid
+classDiagram
+    class FSNode {
+        <<abstract>>
+        #string name_
+        +is_directory()* bool
+        +size()* size_t
+    }
+    class FileNode {
+        -string content_
+        +is_directory() bool
+        +size() size_t
+    }
+    class DirectoryNode {
+        -map~string, FSNode~ children_
+        +is_directory() bool
+        +size() size_t
+        +add_child(FSNode)
+    }
+    FSNode <|-- FileNode
+    FSNode <|-- DirectoryNode
+    DirectoryNode o-- FSNode
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o fs_demo && ./fs_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_fs.cpp -o test_fs && ./test_fs
+```

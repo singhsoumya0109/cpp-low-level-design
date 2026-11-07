@@ -1,15 +1,34 @@
-# Case Study: Multi-Channel Notification Service
+# Case Study 04: Notification Service Platform
 
-> **Primary Patterns**: Factory Method, Strategy, Decorator
+> **Difficulty**: Medium | **Primary Patterns**: Strategy, Factory, Observer, Rate Limiter | **Concurrency**: Thread-Safe Pipeline
 
 ---
 
 ## 1. System Overview
-Design a notification routing engine supporting SMS, Email, and Push notifications with rate limiting, exponential backoff retries, and template formatting.
+Design an omnichannel notification dispatch engine capable of sending transactional and marketing alerts across multiple communication channels (Email, SMS, Push Notification, Webhook) with user preference filtering and rate limiting.
+
+```mermaid
+classDiagram
+    class NotificationService {
+        -map~string, INotificationChannel~ channels_
+        +register_channel(string name, channel)
+        +notify(channel, recipient, message)
+    }
+    class INotificationChannel {
+        <<interface>>
+        +send(recipient, message)
+    }
+    class EmailChannel { +send() }
+    class SMSChannel { +send() }
+    INotificationChannel <|.. EmailChannel
+    INotificationChannel <|.. SMSChannel
+    NotificationService o-- INotificationChannel
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o notification_demo && ./notification_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_notification.cpp -o test_notification && ./test_notification
+```

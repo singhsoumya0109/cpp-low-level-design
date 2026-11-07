@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.15)
+project(Visitor LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(visitor_naive src/01-naive-approach.cpp)
+add_executable(visitor_classic src/02-classic-pattern.cpp)
+add_executable(visitor_realworld src/03-real-world-example.cpp)
+add_executable(visitor_modern src/04-modern-cpp-style.cpp)
+add_executable(visitor_solution exercises/solutions/solution.cpp)
+add_executable(test_visitor tests/test_visitor.cpp)
+add_test(NAME test_visitor COMMAND test_visitor)

@@ -1,15 +1,26 @@
-# Case Study: Splitwise Expense Sharing System
+# Case Study 09: Splitwise Expense Sharing Application
 
-> **Primary Patterns**: Strategy, Observer
+> **Difficulty**: Medium | **Primary Patterns**: Strategy (Split Type), Observer, Graph Simplification | **Concurrency**: Mutex
 
 ---
 
 ## 1. System Overview
-Design an expense-sharing application supporting Equal, Exact, and Percentage splits with a Debt Simplification graph algorithm (Min-Cash Flow).
+Design an expense tracking and bill splitting application allowing users to create groups, record shared expenses (EQUAL, EXACT, PERCENTAGE), maintain running balances, and compute the minimal cash settlement transactions between users.
+
+```mermaid
+classDiagram
+    class SplitwiseService {
+        -unordered_map~string, unordered_map~string, double~~ balances_
+        +add_equal_expense(payer, amount, participants)
+        +print_balances()
+        +get_balance(u1, u2) double
+    }
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o splitwise_demo && ./splitwise_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_splitwise.cpp -o test_splitwise && ./test_splitwise
+```

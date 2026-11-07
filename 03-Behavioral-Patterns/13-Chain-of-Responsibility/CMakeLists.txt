@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.15)
+project(ChainOfResponsibility LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(cor_naive src/01-naive-approach.cpp)
+add_executable(cor_classic src/02-classic-pattern.cpp)
+add_executable(cor_realworld src/03-real-world-example.cpp)
+add_executable(cor_modern src/04-modern-cpp-style.cpp)
+add_executable(cor_solution exercises/solutions/solution.cpp)
+add_executable(test_chain_of_responsibility tests/test_chain_of_responsibility.cpp)
+add_test(NAME test_chain_of_responsibility COMMAND test_chain_of_responsibility)

@@ -1,15 +1,28 @@
-# Case Study: Order Management System
+# Case Study 05: Order & Inventory Management System (OMS)
 
-> **Primary Patterns**: State, Observer, Command
+> **Difficulty**: Medium | **Primary Patterns**: State, Strategy (Payment), Command | **Concurrency**: Pessimistic Locking
 
 ---
 
 ## 1. System Overview
-Design an e-commerce order lifecycle manager tracking order states (Created, Paid, Packed, Shipped, Delivered, Cancelled) with inventory reservation and webhook notifications.
+Design an end-to-end e-commerce order management system that coordinates inventory reservation, payment processing via interchangeable gateways, invoice generation, shipment tracking, and cancellation rollbacks.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Created
+    Created --> Paid : process_payment() [Success]
+    Created --> Cancelled : cancel()
+    Paid --> Shipped : fulfill_items()
+    Shipped --> Delivered : carrier_confirm()
+    Paid --> Cancelled : refund_and_restock()
+    Delivered --> [*]
+    Cancelled --> [*]
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o order_demo && ./order_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_order.cpp -o test_order && ./test_order
+```

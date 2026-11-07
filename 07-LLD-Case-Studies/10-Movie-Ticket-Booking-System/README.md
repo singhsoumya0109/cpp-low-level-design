@@ -1,15 +1,25 @@
-# Case Study: Movie Ticket Booking (BookMyShow)
+# Case Study 10: Movie Ticket Booking System (BookMyShow)
 
-> **Primary Patterns**: State, Strategy
+> **Difficulty**: Hard | **Primary Patterns**: State, Factory, Concurrency Lock Manager | **Concurrency**: Pessimistic Temporary Seat Locks
 
 ---
 
 ## 1. System Overview
-Design a cinema ticket booking platform supporting concurrent seat selection with temporary TTL seat locking, payment idempotency, and race condition prevention.
+Design a high-concurrency movie cinema reservation system. Prevents double-booking during peak ticket release events by employing temporary seat locking with automatic lease expiration timers.
+
+```mermaid
+stateDiagram-v2
+    [*] --> Available
+    Available --> Locked : lock_seat() [User selecting seat]
+    Locked --> Available : lock_timeout_expired() [e.g. 10s]
+    Locked --> Booked : confirm_payment()
+    Booked --> [*]
+```
 
 ---
 
-## 2. Key Engineering Challenges
-- **Thread Safety**: Concurrent requests must be synchronized using RAII locks without causing deadlocks or bottlenecks.
-- **Extensibility**: Core logic must adhere to the Open/Closed Principle so new algorithms or entities can be added without modifying existing code.
-- **Memory Management**: Zero memory leaks using `std::unique_ptr` and `std::shared_ptr`.
+## 2. Build and Test
+```bash
+clang++ -std=c++17 -Wall -Wextra src/solution.cpp -o movie_demo && ./movie_demo
+clang++ -std=c++17 -Wall -Wextra tests/test_movie.cpp -o test_movie && ./test_movie
+```

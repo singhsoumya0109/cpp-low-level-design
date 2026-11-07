@@ -1,36 +1,62 @@
+#include <cassert>
 #include <iostream>
 #include <memory>
+#include <string>
+#include <string_view>
 
-class ITransport {
+class INotification {
 public:
-    virtual ~ITransport() = default;
-    virtual void deliver() const = 0;
+    virtual ~INotification() = default;
+    virtual std::string send(std::string_view recipient, std::string_view msg) = 0;
 };
 
-class Truck : public ITransport {
+class EmailNotification : public INotification {
 public:
-    void deliver() const override { std::cout << "Delivering by land in box.\n"; }
+    std::string send(std::string_view recipient, std::string_view msg) override {
+        return "EMAIL to " + std::string(recipient) + ": " + std::string(msg);
+    }
 };
 
-class Ship : public ITransport {
+class SMSNotification : public INotification {
 public:
-    void deliver() const override { std::cout << "Delivering by sea in container.\n"; }
+    std::string send(std::string_view recipient, std::string_view msg) override {
+        return "SMS to " + std::string(recipient) + ": " + std::string(msg);
+    }
 };
 
-class Logistics {
+class NotificationCreator {
 public:
-    virtual ~Logistics() = default;
-    virtual std::unique_ptr<ITransport> createTransport() const = 0;
+    virtual ~NotificationCreator() = default;
+    virtual std::unique_ptr<INotification> create() const = 0;
+    std::string notify(std::string_view recipient, std::string_view msg) const {
+        return create()->send(recipient, msg);
+    }
 };
 
-class RoadLogistics : public Logistics {
+class EmailCreator : public NotificationCreator {
 public:
-    std::unique_ptr<ITransport> createTransport() const override { return std::make_unique<Truck>(); }
+    std::unique_ptr<INotification> create() const override {
+        return std::make_unique<EmailNotification>();
+    }
+};
+
+class SMSCreator : public NotificationCreator {
+public:
+    std::unique_ptr<INotification> create() const override {
+        return std::make_unique<SMSNotification>();
+    }
 };
 
 int main() {
-    RoadLogistics road;
-    auto t = road.createTransport();
-    t->deliver();
+    EmailCreator ec;
+    SMSCreator sc;
+
+    std::string email_res = ec.notify("user@test.com", "Welcome!");
+    std::string sms_res = sc.notify("+1234567890", "Your OTP is 9482");
+
+    assert(email_res == "EMAIL to user@test.com: Welcome!");
+    assert(sms_res == "SMS to +1234567890: Your OTP is 9482");
+
+    std::cout << "Factory Method solution verified successfully!\n";
     return 0;
 }

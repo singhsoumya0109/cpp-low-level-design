@@ -33,7 +33,7 @@ else
 
         echo "  Compiling: $rel_path"
         $COMPILER -std=c++17 -Wall -Wextra -pthread "$file" -o "$out_bin"
-    done < <(find "$ROOT_DIR" \( -path "$ROOT_DIR/01-*" -o -path "$ROOT_DIR/02-*" -o -path "$ROOT_DIR/03-*" -o -path "$ROOT_DIR/04-*" \) -name "*.cpp" ! -name "starter.cpp")
+    done < <(find "$ROOT_DIR" \( -path "$ROOT_DIR/01-*" -o -path "$ROOT_DIR/02-*" -o -path "$ROOT_DIR/03-*" -o -path "$ROOT_DIR/04-*" -o -path "$ROOT_DIR/07-*" \) -name "*.cpp" ! -name "starter.cpp")
 
 fi
 

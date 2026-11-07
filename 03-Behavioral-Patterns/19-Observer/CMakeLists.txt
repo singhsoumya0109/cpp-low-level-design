@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.15)
+project(Observer LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(observer_naive src/01-naive-approach.cpp)
+add_executable(observer_classic src/02-classic-pattern.cpp)
+add_executable(observer_realworld src/03-real-world-example.cpp)
+add_executable(observer_modern src/04-modern-cpp-style.cpp)
+add_executable(observer_solution exercises/solutions/solution.cpp)
+add_executable(test_observer tests/test_observer.cpp)
+add_test(NAME test_observer COMMAND test_observer)

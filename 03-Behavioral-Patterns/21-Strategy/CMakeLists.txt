@@ -1,0 +1,12 @@
+cmake_minimum_required(VERSION 3.15)
+project(Strategy LANGUAGES CXX)
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+
+add_executable(strategy_naive src/01-naive-approach.cpp)
+add_executable(strategy_classic src/02-classic-pattern.cpp)
+add_executable(strategy_realworld src/03-real-world-example.cpp)
+add_executable(strategy_modern src/04-modern-cpp-style.cpp)
+add_executable(strategy_solution exercises/solutions/solution.cpp)
+add_executable(test_strategy tests/test_strategy.cpp)
+add_test(NAME test_strategy COMMAND test_strategy)
